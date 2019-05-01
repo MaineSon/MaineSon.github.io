@@ -1,0 +1,77 @@
+---
+title: Democratic Twitter Analysis 
+author: Yarmaine Pierson
+date: '2019-05-01'
+slug: democratic-twitter-analysis
+categories:
+  - data analysis
+tags:
+  - R
+image:
+  caption: ''
+  focal_point: ''
+---
+
+
+
+<pre class="r"><code>candid1 &lt;- userTimeline(&quot;PeteButtigieg&quot;, n=3200, includeRts=T)
+candid2 &lt;- userTimeline(&quot;BernieSanders&quot;, n=3200, includeRts=T)
+candid3 &lt;- userTimeline(&quot;KamalaHarris&quot;, n=3200, includeRts=T)
+candid4 &lt;- userTimeline(&quot;CoryBooker&quot;, n=3200, includeRts=T)</code></pre>
+<p>str(candid1)</p>
+<pre class="r"><code>df.candid1 &lt;- twListToDF(candid1) %&gt;% 
+  filter(isRetweet == FALSE) %&gt;% 
+  select(text, favoriteCount, screenName,created, retweetCount)
+
+df.candid2 &lt;- twListToDF(candid2) %&gt;% 
+  filter(isRetweet == FALSE) %&gt;% 
+  select(text, favoriteCount, screenName,created, retweetCount)
+
+df.candid3 &lt;- twListToDF(candid3) %&gt;% 
+  filter(isRetweet == FALSE) %&gt;% 
+  select(text, favoriteCount, screenName,created, retweetCount)
+
+df.candid4 &lt;- twListToDF(candid4) %&gt;% 
+  filter(isRetweet == FALSE) %&gt;% 
+  select(text, favoriteCount, screenName,created, retweetCount)</code></pre>
+<pre class="r"><code>all_candidates &lt;- bind_rows(df.candid1, df.candid2, df.candid3, df.candid4)</code></pre>
+<pre class="r"><code>all_candidates %&gt;% group_by(screenName) %&gt;% count()</code></pre>
+<pre class="r"><code>ggplot(all_candidates, aes(created)) + geom_histogram(fill = &quot;cornflowerblue&quot;,color = &quot;grey&quot;,position=&quot;identity&quot;, alpha=0.5) + labs(title=&quot;Tweet activity over time&quot;,x=&quot;Candiates&quot;, y = &quot;Tweets&quot;) + facet_wrap(~screenName, ncol =2)</code></pre>
+<pre class="r"><code>replace_reg &lt;- &quot;http[s]?://[A-Za-z\\d/\\.]+|&amp;amp;|&amp;lt;|&amp;gt;&quot;
+unnest_reg  &lt;- &quot;([^A-Za-z_\\d#@&#39;]|&#39;(?![A-Za-z_\\d#@]))&quot;
+tidy_tweets &lt;- all_candidates %&gt;% 
+    filter(!str_detect(text, &quot;^RT&quot;)) %&gt;%
+    mutate(text = str_replace_all(text, replace_reg, &quot;&quot;)) %&gt;%
+    mutate(id = row_number()) %&gt;%
+    unnest_tokens(word, text, token = &quot;regex&quot;, pattern = unnest_reg) %&gt;%
+    filter(!word %in% stop_words$word, str_detect(word, &quot;[a-z]&quot;))</code></pre>
+<pre class="r"><code>frequency &lt;- tidy_tweets %&gt;%
+  group_by(screenName,word) %&gt;% 
+  summarise(n = n()) %&gt;% 
+  arrange(-n)
+  #arrange(-n) %&gt;% 
+  #slice(1:10)</code></pre>
+<pre class="r"><code>frequency.spread &lt;- frequency %&gt;% 
+    select(screenName, word, n) %&gt;% 
+    spread(screenName, n) %&gt;%
+    arrange(desc(BernieSanders), desc(KamalaHarris))
+
+ggplot(frequency.spread, aes(BernieSanders, KamalaHarris)) +
+    geom_jitter(
+        alpha = 0.1, size = 2.5, width = 0.15, height = 0.15) +
+    geom_text(aes(label = word), check_overlap = TRUE, vjust = 0) +    
+    scale_x_log10(labels = percent_format()) +
+    scale_y_log10(labels = percent_format()) +
+    geom_abline(color = &quot;red&quot;)</code></pre>
+<pre class="r"><code>top_5_my_candidate &lt;- frequency %&gt;% 
+  filter(screenName == &quot;BernieSanders&quot;) %&gt;% 
+  arrange(-n) %&gt;% 
+  slice(1:5)</code></pre>
+<pre class="r"><code>top_5_over_time &lt;- tidy_tweets %&gt;%
+  filter(screenName == &quot;BernieSanders&quot;) %&gt;%
+  filter(word %in% top_5_my_candidate$word) %&gt;%
+  mutate(month = floor_date(created, unit= &quot;month&quot;)) %&gt;% 
+  group_by(word, month) %&gt;% 
+  summarise(n = n())
+ggplot(top_5_over_time, aes(x=month, y=n, color= word)) +
+    geom_line()</code></pre>

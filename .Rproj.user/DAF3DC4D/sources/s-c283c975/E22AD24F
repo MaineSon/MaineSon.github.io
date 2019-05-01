@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1556720127281.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "E22AD24F",
+    "lastKnownWriteTime" : 1556720601,
+    "last_content_update" : 1556720601757,
+    "path" : "/cloud/project/content/project/twitter_yarmaine__1_.Rmd",
+    "project_path" : "content/project/twitter_yarmaine__1_.Rmd",
+    "properties" : {
+        "cursorPosition" : "265,0",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

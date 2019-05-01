@@ -1,0 +1,17 @@
+---
+title: Welcome!
+author: ''
+date: '2015-07-23'
+slug: r-markdown
+categories: []
+tags: []
+image:
+  caption: ''
+  focal_point: ''
+---
+
+# Welcome
+
+I'm Jane Doe! I've recently completed the Chromebook Data Science Course Set on Leanpub.
+
+I'm interested in working with data and answering interesting questions

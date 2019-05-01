@@ -1,0 +1,507 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Yarmaine Pierson on Yarmaine Pierson</title>
+    <link>/</link>
+    <description>Recent content in Yarmaine Pierson on Yarmaine Pierson</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright> &amp;copy; Yarmaine Pierson {year} </copyright>
+    <lastBuildDate>Sat, 01 Jun 2030 13:00:00 +0000</lastBuildDate>
+    <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Example Talk</title>
+      <link>/talk/example/</link>
+      <pubDate>Sat, 01 Jun 2030 13:00:00 +0000</pubDate>
+      
+      <guid>/talk/example/</guid>
+      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
+  &lt;div&gt;
+    
+Click on the **Slides** button above to view the built-in slides feature.
+
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Slides can be added in a few ways:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Create&lt;/strong&gt; slides using Academic&amp;rsquo;s &lt;em&gt;Slides&lt;/em&gt; feature and link using &lt;code&gt;url_slides&lt;/code&gt; parameter in the front matter of the talk file&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Upload&lt;/strong&gt; an existing slide deck to &lt;code&gt;static/&lt;/code&gt; and link using &lt;code&gt;url_slides&lt;/code&gt; parameter in the front matter of the talk file&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Embed&lt;/strong&gt; your slides (e.g. Google Slides) or presentation video on this page using &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;shortcodes&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Further talk details can easily be added to this page using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Democratic Twitter Analysis</title>
+      <link>/project/democratic-twitter-analysis/</link>
+      <pubDate>Wed, 01 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/project/democratic-twitter-analysis/</guid>
+      <description>
+
+
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;candid1 &amp;lt;- userTimeline(&amp;quot;PeteButtigieg&amp;quot;, n=3200, includeRts=T)
+candid2 &amp;lt;- userTimeline(&amp;quot;BernieSanders&amp;quot;, n=3200, includeRts=T)
+candid3 &amp;lt;- userTimeline(&amp;quot;KamalaHarris&amp;quot;, n=3200, includeRts=T)
+candid4 &amp;lt;- userTimeline(&amp;quot;CoryBooker&amp;quot;, n=3200, includeRts=T)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;str(candid1)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df.candid1 &amp;lt;- twListToDF(candid1) %&amp;gt;% 
+  filter(isRetweet == FALSE) %&amp;gt;% 
+  select(text, favoriteCount, screenName,created, retweetCount)
+
+df.candid2 &amp;lt;- twListToDF(candid2) %&amp;gt;% 
+  filter(isRetweet == FALSE) %&amp;gt;% 
+  select(text, favoriteCount, screenName,created, retweetCount)
+
+df.candid3 &amp;lt;- twListToDF(candid3) %&amp;gt;% 
+  filter(isRetweet == FALSE) %&amp;gt;% 
+  select(text, favoriteCount, screenName,created, retweetCount)
+
+df.candid4 &amp;lt;- twListToDF(candid4) %&amp;gt;% 
+  filter(isRetweet == FALSE) %&amp;gt;% 
+  select(text, favoriteCount, screenName,created, retweetCount)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;all_candidates &amp;lt;- bind_rows(df.candid1, df.candid2, df.candid3, df.candid4)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;all_candidates %&amp;gt;% group_by(screenName) %&amp;gt;% count()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(all_candidates, aes(created)) + geom_histogram(fill = &amp;quot;cornflowerblue&amp;quot;,color = &amp;quot;grey&amp;quot;,position=&amp;quot;identity&amp;quot;, alpha=0.5) + labs(title=&amp;quot;Tweet activity over time&amp;quot;,x=&amp;quot;Candiates&amp;quot;, y = &amp;quot;Tweets&amp;quot;) + facet_wrap(~screenName, ncol =2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;replace_reg &amp;lt;- &amp;quot;http[s]?://[A-Za-z\\d/\\.]+|&amp;amp;amp;|&amp;amp;lt;|&amp;amp;gt;&amp;quot;
+unnest_reg  &amp;lt;- &amp;quot;([^A-Za-z_\\d#@&amp;#39;]|&amp;#39;(?![A-Za-z_\\d#@]))&amp;quot;
+tidy_tweets &amp;lt;- all_candidates %&amp;gt;% 
+    filter(!str_detect(text, &amp;quot;^RT&amp;quot;)) %&amp;gt;%
+    mutate(text = str_replace_all(text, replace_reg, &amp;quot;&amp;quot;)) %&amp;gt;%
+    mutate(id = row_number()) %&amp;gt;%
+    unnest_tokens(word, text, token = &amp;quot;regex&amp;quot;, pattern = unnest_reg) %&amp;gt;%
+    filter(!word %in% stop_words$word, str_detect(word, &amp;quot;[a-z]&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;frequency &amp;lt;- tidy_tweets %&amp;gt;%
+  group_by(screenName,word) %&amp;gt;% 
+  summarise(n = n()) %&amp;gt;% 
+  arrange(-n)
+  #arrange(-n) %&amp;gt;% 
+  #slice(1:10)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;frequency.spread &amp;lt;- frequency %&amp;gt;% 
+    select(screenName, word, n) %&amp;gt;% 
+    spread(screenName, n) %&amp;gt;%
+    arrange(desc(BernieSanders), desc(KamalaHarris))
+
+ggplot(frequency.spread, aes(BernieSanders, KamalaHarris)) +
+    geom_jitter(
+        alpha = 0.1, size = 2.5, width = 0.15, height = 0.15) +
+    geom_text(aes(label = word), check_overlap = TRUE, vjust = 0) +    
+    scale_x_log10(labels = percent_format()) +
+    scale_y_log10(labels = percent_format()) +
+    geom_abline(color = &amp;quot;red&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;top_5_my_candidate &amp;lt;- frequency %&amp;gt;% 
+  filter(screenName == &amp;quot;BernieSanders&amp;quot;) %&amp;gt;% 
+  arrange(-n) %&amp;gt;% 
+  slice(1:5)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;top_5_over_time &amp;lt;- tidy_tweets %&amp;gt;%
+  filter(screenName == &amp;quot;BernieSanders&amp;quot;) %&amp;gt;%
+  filter(word %in% top_5_my_candidate$word) %&amp;gt;%
+  mutate(month = floor_date(created, unit= &amp;quot;month&amp;quot;)) %&amp;gt;% 
+  group_by(word, month) %&amp;gt;% 
+  summarise(n = n())
+ggplot(top_5_over_time, aes(x=month, y=n, color= word)) +
+    geom_line()&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>NBA Analysis</title>
+      <link>/project/nba-analysis/</link>
+      <pubDate>Wed, 01 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/project/nba-analysis/</guid>
+      <description>
+
+
+&lt;div id=&#34;import-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Import data&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;champs &amp;lt;- read_csv(file = &amp;quot;data/championsdata.csv&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   Team = col_character()
+## )&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## See spec(...) for full column specifications.&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;runners &amp;lt;- read_csv(file = &amp;quot;data/runnerupsdata.csv&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   Team = col_character()
+## )
+## See spec(...) for full column specifications.&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;all_teams = bind_rows(&amp;quot;Champion&amp;quot; = champs, &amp;quot;Runner&amp;quot; = runners, .id = &amp;quot;rank&amp;quot;)
+
+
+
+
+champs &amp;lt;- champs %&amp;gt;%
+    mutate(Team = ifelse(Team == &amp;quot;Warriorrs&amp;quot;,&amp;quot;Warriors&amp;quot;,Team)) %&amp;gt;%
+    mutate(Team = ifelse(Team == &amp;quot;&amp;#39;Heat&amp;#39;&amp;quot;,&amp;quot;Heat&amp;quot;,Team)) %&amp;gt;%
+    mutate(Win = as.factor(Win)) %&amp;gt;%
+    mutate(Home = as.factor(Home))
+
+runners &amp;lt;- runners %&amp;gt;%
+    mutate(Win = as.factor(Win)) %&amp;gt;%
+    mutate(Home = as.factor(Home))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;champs$Team&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   [1] &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;   
+##   [6] &amp;quot;Lakers&amp;quot;    &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;  
+##  [11] &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;   
+##  [16] &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Sixers&amp;quot;    &amp;quot;Sixers&amp;quot;   
+##  [21] &amp;quot;Sixers&amp;quot;    &amp;quot;Sixers&amp;quot;    &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;  
+##  [26] &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Lakers&amp;quot;   
+##  [31] &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;   
+##  [36] &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;  
+##  [41] &amp;quot;Celtics&amp;quot;   &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;   
+##  [46] &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;   
+##  [51] &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Pistons&amp;quot;  
+##  [56] &amp;quot;Pistons&amp;quot;   &amp;quot;Pistons&amp;quot;   &amp;quot;Pistons&amp;quot;   &amp;quot;Pistons&amp;quot;   &amp;quot;Pistons&amp;quot;  
+##  [61] &amp;quot;Pistons&amp;quot;   &amp;quot;Pistons&amp;quot;   &amp;quot;Pistons&amp;quot;   &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;    
+##  [66] &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;    
+##  [71] &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;    
+##  [76] &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;    
+##  [81] &amp;quot;Rockets&amp;quot;   &amp;quot;Rockets&amp;quot;   &amp;quot;Rockets&amp;quot;   &amp;quot;Rockets&amp;quot;   &amp;quot;Rockets&amp;quot;  
+##  [86] &amp;quot;Rockets&amp;quot;   &amp;quot;Rockets&amp;quot;   &amp;quot;Rockets&amp;quot;   &amp;quot;Rockets&amp;quot;   &amp;quot;Rockets&amp;quot;  
+##  [91] &amp;quot;Rockets&amp;quot;   &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;    
+##  [96] &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;    
+## [101] &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;    
+## [106] &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Bulls&amp;quot;     &amp;quot;Spurs&amp;quot;    
+## [111] &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Lakers&amp;quot;   
+## [116] &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;   
+## [121] &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;   
+## [126] &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Spurs&amp;quot;    
+## [131] &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;    
+## [136] &amp;quot;Pistons&amp;quot;   &amp;quot;Pistons&amp;quot;   &amp;quot;Pistons&amp;quot;   &amp;quot;Pistons&amp;quot;   &amp;quot;Pistons&amp;quot;  
+## [141] &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;    
+## [146] &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;     
+## [151] &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;      &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;    
+## [156] &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;  
+## [161] &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Celtics&amp;quot;   &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;   
+## [166] &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;   
+## [171] &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;    &amp;quot;Lakers&amp;quot;   
+## [176] &amp;quot;Mavericks&amp;quot; &amp;quot;Mavericks&amp;quot; &amp;quot;Mavericks&amp;quot; &amp;quot;Mavericks&amp;quot; &amp;quot;Mavericks&amp;quot;
+## [181] &amp;quot;Mavericks&amp;quot; &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;     
+## [186] &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;     
+## [191] &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;      &amp;quot;Heat&amp;quot;      &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;    
+## [196] &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Spurs&amp;quot;     &amp;quot;Warriors&amp;quot;  &amp;quot;Warriors&amp;quot; 
+## [201] &amp;quot;Warriors&amp;quot;  &amp;quot;Warriors&amp;quot;  &amp;quot;Warriors&amp;quot;  &amp;quot;Warriors&amp;quot;  &amp;quot;Cavaliers&amp;quot;
+## [206] &amp;quot;Cavaliers&amp;quot; &amp;quot;Cavaliers&amp;quot; &amp;quot;Cavaliers&amp;quot; &amp;quot;Cavaliers&amp;quot; &amp;quot;Cavaliers&amp;quot;
+## [211] &amp;quot;Cavaliers&amp;quot; &amp;quot;Warriors&amp;quot;  &amp;quot;Warriors&amp;quot;  &amp;quot;Warriors&amp;quot;  &amp;quot;Warriors&amp;quot; 
+## [216] &amp;quot;Warriors&amp;quot;  &amp;quot;Warriors&amp;quot;  &amp;quot;Warriors&amp;quot;  &amp;quot;Warriors&amp;quot;  &amp;quot;Warriors&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;champs %&amp;gt;% 
+    select(Team) %&amp;gt;%
+    distinct()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 11 x 1
+##    Team     
+##    &amp;lt;chr&amp;gt;    
+##  1 Lakers   
+##  2 Celtics  
+##  3 Sixers   
+##  4 Pistons  
+##  5 Bulls    
+##  6 Rockets  
+##  7 Spurs    
+##  8 Heat     
+##  9 Mavericks
+## 10 Warriors 
+## 11 Cavaliers&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;all_teams %&amp;gt;%
+  group_by(Home) %&amp;gt;%
+  summarize(mean=mean(PTS))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 2 x 2
+##    Home  mean
+##   &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1     0  96.3
+## 2     1 101.&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(all_teams, aes(x=Year, y = TP)) + 
+geom_bar(stat = &amp;quot;identity&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./project/2019-04-30-nba-data-analysis_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ATUS Survey Analysis</title>
+      <link>/project/atus-survey-analysis/</link>
+      <pubDate>Sat, 30 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/project/atus-survey-analysis/</guid>
+      <description>
+
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>Example Page</title>
+      <link>/tutorial/example/</link>
+      <pubDate>Sun, 09 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tutorial/example/</guid>
+      <description>
+
+&lt;p&gt;In this tutorial, I&amp;rsquo;ll share my top 10 tips for getting started with Academic:&lt;/p&gt;
+
+&lt;h2 id=&#34;tip-1&#34;&gt;Tip 1&lt;/h2&gt;
+
+&lt;p&gt;&amp;hellip;&lt;/p&gt;
+
+&lt;h2 id=&#34;tip-2&#34;&gt;Tip 2&lt;/h2&gt;
+
+&lt;p&gt;&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Privacy Policy</title>
+      <link>/privacy/</link>
+      <pubDate>Thu, 28 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/privacy/</guid>
+      <description>&lt;p&gt;&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>A Person Re-Identification System For Mobile Devices</title>
+      <link>/publication/person-re-id/</link>
+      <pubDate>Tue, 01 Sep 2015 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/person-re-id/</guid>
+      <description>&lt;p&gt;More detail can easily be written here using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Welcome!</title>
+      <link>/post/r-markdown/</link>
+      <pubDate>Thu, 23 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>/post/r-markdown/</guid>
+      <description>
+
+
+&lt;div id=&#34;welcome&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Welcome&lt;/h1&gt;
+&lt;p&gt;I’m Jane Doe! I’ve recently completed the Chromebook Data Science Course Set on Leanpub.&lt;/p&gt;
+&lt;p&gt;I’m interested in working with data and answering interesting questions&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Welcome!</title>
+      <link>/post/r-markdown/</link>
+      <pubDate>Thu, 23 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>/post/r-markdown/</guid>
+      <description>
+
+
+&lt;div id=&#34;welcome&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Welcome&lt;/h1&gt;
+&lt;p&gt;I’m Jane Doe! I’ve recently completed the Chromebook Data Science Course Set on Leanpub.&lt;/p&gt;
+&lt;p&gt;I’m interested in working with data and answering interesting questions&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Mobile visual clothing search</title>
+      <link>/publication/clothing-search/</link>
+      <pubDate>Mon, 01 Jul 2013 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/clothing-search/</guid>
+      <description>&lt;p&gt;More detail can easily be written here using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Slides</title>
+      <link>/slides/example-slides/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/slides/example-slides/</guid>
+      <description>
+
+&lt;h1 id=&#34;welcome-to-slides&#34;&gt;Welcome to Slides&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/&#34; target=&#34;_blank&#34;&gt;Academic&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;features&#34;&gt;Features&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Efficiently write slides in Markdown&lt;/li&gt;
+&lt;li&gt;3-in-1: Create, Present, and Publish your slides&lt;/li&gt;
+&lt;li&gt;Supports speaker notes&lt;/li&gt;
+&lt;li&gt;Mobile friendly slides&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;controls&#34;&gt;Controls&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Next: &lt;code&gt;Right Arrow&lt;/code&gt; or &lt;code&gt;Space&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Previous: &lt;code&gt;Left Arrow&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Start: &lt;code&gt;Home&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Finish: &lt;code&gt;End&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Overview: &lt;code&gt;Esc&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Speaker notes: &lt;code&gt;S&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Fullscreen: &lt;code&gt;F&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Zoom: &lt;code&gt;Alt + Click&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/hakimel/reveal.js#pdf-export&#34; target=&#34;_blank&#34;&gt;PDF Export&lt;/a&gt;: &lt;code&gt;E&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;code-highlighting&#34;&gt;Code Highlighting&lt;/h2&gt;
+
+&lt;p&gt;Inline code: &lt;code&gt;variable&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Code block:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;porridge = &amp;quot;blueberry&amp;quot;
+if porridge == &amp;quot;blueberry&amp;quot;:
+    print(&amp;quot;Eating...&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;math&#34;&gt;Math&lt;/h2&gt;
+
+&lt;p&gt;In-line math: $x + y = z$&lt;/p&gt;
+
+&lt;p&gt;Block math:&lt;/p&gt;
+
+&lt;p&gt;$$
+f\left( x \right) = \;\frac{{2\left( {x + 4} \right)\left( {x - 4} \right)}}{{\left( {x + 4} \right)\left( {x + 1} \right)}}
+$$&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;fragments&#34;&gt;Fragments&lt;/h2&gt;
+
+&lt;p&gt;Make content appear incrementally&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{{% fragment %}} One {{% /fragment %}}
+{{% fragment %}} **Two** {{% /fragment %}}
+{{% fragment %}} Three {{% /fragment %}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Press &lt;code&gt;Space&lt;/code&gt; to play!&lt;/p&gt;
+
+&lt;p&gt;&lt;span class=&#34;fragment &#34; &gt;
+   One
+&lt;/span&gt;
+&lt;span class=&#34;fragment &#34; &gt;
+   &lt;strong&gt;Two&lt;/strong&gt;
+&lt;/span&gt;
+&lt;span class=&#34;fragment &#34; &gt;
+   Three
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;A fragment can accept two optional parameters:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;class&lt;/code&gt;: use a custom style (requires definition in custom CSS)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;weight&lt;/code&gt;: sets the order in which a fragment appears&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;speaker-notes&#34;&gt;Speaker Notes&lt;/h2&gt;
+
+&lt;p&gt;Add speaker notes to your presentation&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;{{% speaker_note %}}
+- Only the speaker can read these notes
+- Press `S` key to view
+{{% /speaker_note %}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Press the &lt;code&gt;S&lt;/code&gt; key to view the speaker notes!&lt;/p&gt;
+
+&lt;aside class=&#34;notes&#34;&gt;
+  &lt;ul&gt;
+&lt;li&gt;Only the speaker can read these notes&lt;/li&gt;
+&lt;li&gt;Press &lt;code&gt;S&lt;/code&gt; key to view&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/aside&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;themes&#34;&gt;Themes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;black: Black background, white text, blue links (default)&lt;/li&gt;
+&lt;li&gt;white: White background, black text, blue links&lt;/li&gt;
+&lt;li&gt;league: Gray background, white text, blue links&lt;/li&gt;
+&lt;li&gt;beige: Beige background, dark text, brown links&lt;/li&gt;
+&lt;li&gt;sky: Blue background, thin dark text, blue links&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+&lt;li&gt;night: Black background, thick white text, orange links&lt;/li&gt;
+&lt;li&gt;serif: Cappuccino background, gray text, brown links&lt;/li&gt;
+&lt;li&gt;simple: White background, black text, blue links&lt;/li&gt;
+&lt;li&gt;solarized: Cream-colored background, dark green text, blue links&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+
+&lt;section data-noprocess data-shortcode-slide
+  
+      
+      data-background-image=&#34;/img/boards.jpg&#34;
+  &gt;
+
+
+&lt;h2 id=&#34;custom-slide&#34;&gt;Custom Slide&lt;/h2&gt;
+
+&lt;p&gt;Customize the slide style and background&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;{{&amp;lt; slide background-image=&amp;quot;/img/boards.jpg&amp;quot; &amp;gt;}}
+{{&amp;lt; slide background-color=&amp;quot;#0000FF&amp;quot; &amp;gt;}}
+{{&amp;lt; slide class=&amp;quot;my-style&amp;quot; &amp;gt;}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;custom-css-example&#34;&gt;Custom CSS Example&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s make headers navy colored.&lt;/p&gt;
+
+&lt;p&gt;Create &lt;code&gt;assets/css/reveal_custom.css&lt;/code&gt; with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;.reveal section h1,
+.reveal section h2,
+.reveal section h3 {
+  color: navy;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;questions&#34;&gt;Questions?&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://discourse.gohugo.io&#34; target=&#34;_blank&#34;&gt;Ask&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/&#34; target=&#34;_blank&#34;&gt;Documentation&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

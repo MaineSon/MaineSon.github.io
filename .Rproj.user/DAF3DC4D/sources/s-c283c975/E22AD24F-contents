@@ -1,0 +1,265 @@
+---
+title: Democratic Twitter
+author: Jane Doe
+date: '2019-03-30'
+slug: atus-survey-analysis
+categories:
+  - data analysis
+tags:
+  - R
+image:
+  caption: ''
+  focal_point: ''
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Install and load twitteR, tidytext, tidyverse, lubridate, and scales packages
+library(twitteR)
+library(tidytext)
+library(tidyverse)
+library(lubridate)
+library(scales)
+```
+
+
+*Note*: If you try to Knit this document at this time, you *will* get an error because there is code in this document that has to be edited (by you!) before it will be able to successfully knit!
+
+*Note*: In your case, before you push all your files to Github, make sure you delete your personal keys (the four lines of random strings for the Twitter API) for privacy reasons.
+
+## Final Project
+
+This exercise has been generated to practice everything you have learned in this course set.
+
+### GitHub Setup
+
+To get started, you'll want to go to GitHub and start a new repository:
+
+- Call this repository `final_project`. 
+- Add a short description
+- Check the box to "Initialize this repository with a README. 
+- Click `Create Repository`
+
+Once the repository has been created, Click on `Clone or download` and copy the "Clone with HTTPS" link provided. You'll use this to clone your repo in RStudio Cloud.
+
+**Note**: If you're stuck on this, these steps were covered in detail in an earlier course: [Version Control](https://leanpub.com/universities/courses/jhu/version-control). Refer to the materials in this course if you're stuck on this part of the project.
+
+### RStudio Cloud Setup
+
+Go to RStudio Coud and create a new project based on Github. As discussed previously, you'll want all your data science projects to be organized from the very beginning. Let's do that now!
+
+First, use `cd` to get yourself into the directory of your GitHub Project.  
+
+Once in the correct directory, use `mkdir` in the terminal to create folders with the following structure:
+
+- data/
+  - raw_data/
+  - tidy_data/
+- code/
+  - raw_code/
+  - final_code/
+- figures/
+  - exploratory_figures/
+  - explanatory_figures/
+- products/
+  - writing/
+
+Upload this .Rmd file into the main project directory.
+
+Once the .Rmd document is in the correct folder, you'll want to **change the author of this document** to your name at the top of the .Rmd document (in the YAML). Save this change before moving to the next step.
+
+**Note**: If you're stuck on this, these steps were covered in detail in an earlier course: [Organizing Data Science Projects](https://leanpub.com/universities/courses/jhu/cbds-organizing). Refer to the materials in this course if you're stuck on this part of the project.
+
+### Pushing to GitHub
+
+You'll want to save changes to your project regularly by pushing them to GitHub. Now that you've got your file structure set up and have added a code file (.Rmd), it's a good time to stage, commit, and push these changes to GitHub. Do so now, and then take a long on GitHub to see the changes on their website!
+
+**Note**: If you're stuck on this, these steps were covered in detail in an earlier course: [Version Control](https://leanpub.com/universities/courses/jhu/version-control). Refer to the materials in this course if you're stuck on this part of the project.
+
+
+## Setting up Twitter API
+
+
+As we learned in the office hours, we first need to set up the Twitter API using API keys and secrets. Enter the 4 strings that you get from Twitter developer website found [here](https://developer.twitter.com/en/apps) inside the quotations.
+
+```{r, echo = FALSE, eval=FALSE}
+## Then you need obtain your own API key and access token
+consumer_key <- "VhgyP6E7rpB75C7dlKMriXH2f"
+consumer_secret <- "OfGZjIidJHn7VEH73iQBAhceTBk8xpkgqZQCz2x7fKD1an1tGJ"
+access_token <- "1082444958349574145-05xInT9OUIY0zIzczBSKtmMJU5FNR1"
+access_secret <- "7ASfUHYuSIzydLjqg4P7Zetr2I6h1q2G30lDORatdRrqW"
+setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
+```
+
+To access any person's public Twitter data, we first need their Twitter handle. For instance, Lebron James's Twitter handle is *KingJames* without the `@` sign. The main function for loading hte data from Twitter is `userTimeline()` from the package **twitteR**. It downloads at most 3200 recent tweets of a public twitter user. The default includeRts=FALSE parameter seems to remove a lot of false positives, so we’ll instead do it manually later. Find the twitter hande of your **top 4** candidates and enter them inside quotation:
+
+```{r, eval=FALSE}
+candid1 <- userTimeline("PeteButtigieg", n=3200, includeRts=T)
+candid2 <- userTimeline("BernieSanders", n=3200, includeRts=T)
+candid3 <- userTimeline("KamalaHarris", n=3200, includeRts=T)
+candid4 <- userTimeline("CoryBooker", n=3200, includeRts=T)
+```
+
+The data that we download using the `userTimeline()` function is not in data frame. First use the appropriate function to find the structure of the data.
+
+str(candid1)
+
+We will first convert the data into data frames. For this we will use the function `twListToDF()` function from the package **twitteR** like below. In the same pipe, use the appropriate function to only keep rows for which `isRetweet` is `FALSE`. At the end, in the same pipe, use the appropriate function to only select columns `text`, `favoriteCount`, `screenName`, `created` and `retweetCount`.
+
+
+```{r,eval=FALSE}
+df.candid1 <- twListToDF(candid1) %>% 
+  filter(isRetweet == FALSE) %>% 
+  select(text, favoriteCount, screenName,created, retweetCount)
+
+df.candid2 <- twListToDF(candid2) %>% 
+  filter(isRetweet == FALSE) %>% 
+  select(text, favoriteCount, screenName,created, retweetCount)
+
+df.candid3 <- twListToDF(candid3) %>% 
+  filter(isRetweet == FALSE) %>% 
+  select(text, favoriteCount, screenName,created, retweetCount)
+
+df.candid4 <- twListToDF(candid4) %>% 
+  filter(isRetweet == FALSE) %>% 
+  select(text, favoriteCount, screenName,created, retweetCount)
+## now do this for the other 3 candidates
+
+
+```
+
+Read the Twitter API documentation or the manual of the package **twitteR** and provide an explanation for what each of the above 5 columns mean.
+
+Text is the actual tweet itself. FavoriteCount is the number of times that tweet was favored by someone. screenName is the twitter name of the candidate. created is when the tweet was created. retweetCount is the number of times the tweet was retweeted.
+
+
+Make a single data frame that has combines all the rows of the 4 data frames above. call the new data frame `all_candidates`.
+
+```{r,eval=FALSE}
+## bind the two data frame by rows
+all_candidates <- bind_rows(df.candid1, df.candid2, df.candid3, df.candid4)
+
+```
+
+Looking at the `all_candidates` data frame, how many tweets, each candiate has tweeted? 
+
+```{r, eval=FALSE}
+all_candidates %>% group_by(screenName) %>% count()
+    
+```
+
+Now use **ggplot2** to plot the histogram of the number of tweets over time. What function do you need to use for histograms? Use `facet_wrap()` to show the graph for all the candidates. Also make the title of the whole plot "Tweet activity over time"
+
+```{r, eval=FALSE}
+ggplot(all_candidates, aes(created)) + geom_histogram(fill = "cornflowerblue",color = "grey",position="identity", alpha=0.5) + labs(title="Tweet activity over time",x="Candiates", y = "Tweets") + facet_wrap(~screenName, ncol =2)
+    
+
+```
+
+
+Let's tidy the data a bit. Run the following code. This is inspired by Ceshine Lee on the Medium. The main thing the following code does is to create a column called `word` with each row being one word from the tweets. So the tweet *Nothing like pure love* will be 4 rews containing *Nothing*, *like*, *pure*, and *love*.
+
+```{r, eval=FALSE}
+replace_reg <- "http[s]?://[A-Za-z\\d/\\.]+|&amp;|&lt;|&gt;"
+unnest_reg  <- "([^A-Za-z_\\d#@']|'(?![A-Za-z_\\d#@]))"
+tidy_tweets <- all_candidates %>% 
+    filter(!str_detect(text, "^RT")) %>%
+    mutate(text = str_replace_all(text, replace_reg, "")) %>%
+    mutate(id = row_number()) %>%
+    unnest_tokens(word, text, token = "regex", pattern = unnest_reg) %>%
+    filter(!word %in% stop_words$word, str_detect(word, "[a-z]"))
+```
+
+Now that we have words as rows, let's look at the frequency of words used by each candidate. Create tables that show the top 10 most used words by each candidate. 
+
+```{r, eval=FALSE}
+frequency <- tidy_tweets %>%
+  group_by(screenName,word) %>% 
+  summarise(n = n()) %>% 
+  arrange(-n)
+  #arrange(-n) %>% 
+  #slice(1:10)
+
+```
+
+
+Now that you have the frequency table for all the candidates, pick two of the candidates and edit the following code to compare the words they commonly use in the tweets.
+
+```{r, eval=FALSE}
+frequency.spread <- frequency %>% 
+    select(screenName, word, n) %>% 
+    spread(screenName, n) %>%
+    arrange(desc(BernieSanders), desc(KamalaHarris))
+
+ggplot(frequency.spread, aes(BernieSanders, KamalaHarris)) +
+    geom_jitter(
+        alpha = 0.1, size = 2.5, width = 0.15, height = 0.15) +
+    geom_text(aes(label = word), check_overlap = TRUE, vjust = 0) +    
+    scale_x_log10(labels = percent_format()) +
+    scale_y_log10(labels = percent_format()) +
+    geom_abline(color = "red")
+```
+
+Look at the graph you just made, what are some of the words that the two candidates use at the same rate?
+
+For one of the candidates, find the top 5 most frequently used words and save them to an object called `top_5_my_candidate`.
+
+```{r, eval=FALSE}
+top_5_my_candidate <- frequency %>% 
+  filter(screenName == "BernieSanders") %>% 
+  arrange(-n) %>% 
+  slice(1:5)
+    
+```
+
+We would like to know how the top 5 most frequently used words have changed over time. Pick the same candidate for whom you found the top 5 words and through a `geom_line()` find how the use of those words have changed over time. Use the function `floor_date()` from the package **lubridate** and use months as time buckets.
+
+```{r, eval=FALSE}
+top_5_over_time <- tidy_tweets %>%
+  filter(screenName == "BernieSanders") %>%
+  filter(word %in% top_5_my_candidate$word) %>%
+  mutate(month = floor_date(created, unit= "month")) %>% 
+  group_by(word, month) %>% 
+  summarise(n = n())
+ggplot(top_5_over_time, aes(x=month, y=n, color= word)) +
+    geom_line()
+
+
+```
+
+
+
+Congratulations! You have completed the project. There are a few final notes:
+
+### Add Markdown Text to .Rmd
+
+Before finalizing your project you'll want be sure there are **comments in your code chunks** and **text outside of your code chunks** to explain what you're doing in each code chunk. These explanations are incredibly helpful for someone who doesn't code or someone unfamiliar to your project.
+
+**Note**: If you're stuck on this, these steps were covered in detail in an earlier course: [Introduction to R](https://leanpub.com/universities/courses/jhu/introduction-to-r). Refer to the R Markdown lesson in this course if you're stuck on this part (or the next part) of the project.
+
+
+### Knit your R Markdown Document
+
+Last but not least, you'll want to **Knit your .Rmd document into an HTML document**. If you get an error, take a look at what the error says and edit your .Rmd document. Then, try to Knit again! Troubleshooting these error messages will teach you a lot about coding in R.
+
+### A Few Final Checks
+
+A complete project should have:
+
+- Completed code chunks throughout the .Rmd document (your RMarkdown document should Knit without any error)
+- README.md text file explaining your project
+- Comments in your code chunks
+- Answered all questions throughout this exercise.
+
+### Final `push` to GitHub
+
+*Note*: In your case, before you push all your files to Github, make sure you delete your personal keys (the four lines of random strings for the Twitter API) for privacy reasons.
+
+Now that you've finalized your project, you'll do one final **push to GitHub**. `add`, `commit`, and `push` your work to GitHub. Navigate to your GitHub repository, and answer the final question below! 
+
+**Note**: If you're stuck on this, these steps were covered in detail in an earlier course: [Version Control](https://leanpub.com/universities/courses/jhu/version-control). Refer to the materials in this course if you're stuck on this part of the project.
+
+At the end, submit the link to your github repository to us.
+
+? Submit the URL to your `final_project` GitHub repository below.
+

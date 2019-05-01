@@ -1,0 +1,39 @@
+---
+authors:
+- admin
+bio: Jane Doe is a fictional character that was made to illustrate different concepts related to data science.
+education:
+  courses:
+  - course: Chromebook Data Science
+    institution: Leanpub
+    year: anticipated completion - April 2019
+email: "jane.everyday.doe@gmail.com"
+interests:
+- Data Analysis
+- Data Wrangling
+- Data Visualization
+name: Jane Doe
+organizations:
+- name: Chromebook Data Science
+  url: "http://jhudatascience.org/chromebookdatascience/index.html"
+role: 
+social:
+- icon: envelope
+  icon_pack: fas
+  link: '#contact'
+- icon: twitter
+  icon_pack: fab
+  link: https://twitter.com/jane_everyday
+#- icon: google-scholar
+ # icon_pack: ai
+  #link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
+- icon: github
+  icon_pack: fab
+  link: https://github.com/janeeverydaydoe
+superuser: true
+user_groups:
+- Researchers
+- Visitors
+---
+
+Jane Doe is a fictional character that was made to illustrate different concepts related to data science. She's used throughout the Chromebook Data Science Course Set. She's particularly interested in both introducing the field of data science to anyone and everyone and teaching others how to do data science. Since she's fictional, she doesn't have any cool projects to tell you about or some interesting background information or interests to share, but if she did, she'd add them here. 

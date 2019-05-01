@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R on Yarmaine Pierson</title>
+    <link>/tags/r/</link>
+    <description>Recent content in R on Yarmaine Pierson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright> &amp;copy; Yarmaine Pierson {year} </copyright>
+    <lastBuildDate>Wed, 01 May 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Democratic Twitter Analysis</title>
+      <link>/project/democratic-twitter-analysis/</link>
+      <pubDate>Wed, 01 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/project/democratic-twitter-analysis/</guid>
+      <description>candid1 &amp;lt;- userTimeline(&amp;quot;PeteButtigieg&amp;quot;, n=3200, includeRts=T) candid2 &amp;lt;- userTimeline(&amp;quot;BernieSanders&amp;quot;, n=3200, includeRts=T) candid3 &amp;lt;- userTimeline(&amp;quot;KamalaHarris&amp;quot;, n=3200, includeRts=T) candid4 &amp;lt;- userTimeline(&amp;quot;CoryBooker&amp;quot;, n=3200, includeRts=T) str(candid1)
+df.candid1 &amp;lt;- twListToDF(candid1) %&amp;gt;% filter(isRetweet == FALSE) %&amp;gt;% select(text, favoriteCount, screenName,created, retweetCount) df.candid2 &amp;lt;- twListToDF(candid2) %&amp;gt;% filter(isRetweet == FALSE) %&amp;gt;% select(text, favoriteCount, screenName,created, retweetCount) df.candid3 &amp;lt;- twListToDF(candid3) %&amp;gt;% filter(isRetweet == FALSE) %&amp;gt;% select(text, favoriteCount, screenName,created, retweetCount) df.candid4 &amp;lt;- twListToDF(candid4) %&amp;gt;% filter(isRetweet == FALSE) %&amp;gt;% select(text, favoriteCount, screenName,created, retweetCount) all_candidates &amp;lt;- bind_rows(df.</description>
+    </item>
+    
+    <item>
+      <title>NBA Analysis</title>
+      <link>/project/nba-analysis/</link>
+      <pubDate>Wed, 01 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/project/nba-analysis/</guid>
+      <description>Import data champs &amp;lt;- read_csv(file = &amp;quot;data/championsdata.csv&amp;quot;) ## Parsed with column specification: ## cols( ## .default = col_double(), ## Team = col_character() ## ) ## See spec(...) for full column specifications. runners &amp;lt;- read_csv(file = &amp;quot;data/runnerupsdata.csv&amp;quot;) ## Parsed with column specification: ## cols( ## .default = col_double(), ## Team = col_character() ## ) ## See spec(...) for full column specifications. all_teams = bind_rows(&amp;quot;Champion&amp;quot; = champs, &amp;quot;Runner&amp;quot; = runners, .id = &amp;quot;rank&amp;quot;) champs &amp;lt;- champs %&amp;gt;% mutate(Team = ifelse(Team == &amp;quot;Warriorrs&amp;quot;,&amp;quot;Warriors&amp;quot;,Team)) %&amp;gt;% mutate(Team = ifelse(Team == &amp;quot;&amp;#39;Heat&amp;#39;&amp;quot;,&amp;quot;Heat&amp;quot;,Team)) %&amp;gt;% mutate(Win = as.</description>
+    </item>
+    
+    <item>
+      <title>ATUS Survey Analysis</title>
+      <link>/project/atus-survey-analysis/</link>
+      <pubDate>Sat, 30 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/project/atus-survey-analysis/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

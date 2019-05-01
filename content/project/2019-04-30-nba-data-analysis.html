@@ -1,0 +1,120 @@
+---
+title: NBA Analysis 
+author: Yarmaine Pierson
+date: '2019-05-01'
+slug: NBA-analysis
+categories:
+  - data analysis
+tags:
+  - R
+image:
+  caption: ''
+  focal_point: ''
+---
+
+
+
+<div id="import-data" class="section level2">
+<h2>Import data</h2>
+<pre class="r"><code>champs &lt;- read_csv(file = &quot;data/championsdata.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   Team = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre class="r"><code>runners &lt;- read_csv(file = &quot;data/runnerupsdata.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   Team = col_character()
+## )
+## See spec(...) for full column specifications.</code></pre>
+<pre class="r"><code>all_teams = bind_rows(&quot;Champion&quot; = champs, &quot;Runner&quot; = runners, .id = &quot;rank&quot;)
+
+
+
+
+champs &lt;- champs %&gt;%
+    mutate(Team = ifelse(Team == &quot;Warriorrs&quot;,&quot;Warriors&quot;,Team)) %&gt;%
+    mutate(Team = ifelse(Team == &quot;&#39;Heat&#39;&quot;,&quot;Heat&quot;,Team)) %&gt;%
+    mutate(Win = as.factor(Win)) %&gt;%
+    mutate(Home = as.factor(Home))
+
+runners &lt;- runners %&gt;%
+    mutate(Win = as.factor(Win)) %&gt;%
+    mutate(Home = as.factor(Home))</code></pre>
+<pre class="r"><code>champs$Team</code></pre>
+<pre><code>##   [1] &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;   
+##   [6] &quot;Lakers&quot;    &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Celtics&quot;  
+##  [11] &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;   
+##  [16] &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Sixers&quot;    &quot;Sixers&quot;   
+##  [21] &quot;Sixers&quot;    &quot;Sixers&quot;    &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Celtics&quot;  
+##  [26] &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Lakers&quot;   
+##  [31] &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;   
+##  [36] &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Celtics&quot;  
+##  [41] &quot;Celtics&quot;   &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;   
+##  [46] &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;   
+##  [51] &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Pistons&quot;  
+##  [56] &quot;Pistons&quot;   &quot;Pistons&quot;   &quot;Pistons&quot;   &quot;Pistons&quot;   &quot;Pistons&quot;  
+##  [61] &quot;Pistons&quot;   &quot;Pistons&quot;   &quot;Pistons&quot;   &quot;Bulls&quot;     &quot;Bulls&quot;    
+##  [66] &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;    
+##  [71] &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;    
+##  [76] &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;    
+##  [81] &quot;Rockets&quot;   &quot;Rockets&quot;   &quot;Rockets&quot;   &quot;Rockets&quot;   &quot;Rockets&quot;  
+##  [86] &quot;Rockets&quot;   &quot;Rockets&quot;   &quot;Rockets&quot;   &quot;Rockets&quot;   &quot;Rockets&quot;  
+##  [91] &quot;Rockets&quot;   &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;    
+##  [96] &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;    
+## [101] &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;    
+## [106] &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Bulls&quot;     &quot;Spurs&quot;    
+## [111] &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Lakers&quot;   
+## [116] &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;   
+## [121] &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;   
+## [126] &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Spurs&quot;    
+## [131] &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Spurs&quot;    
+## [136] &quot;Pistons&quot;   &quot;Pistons&quot;   &quot;Pistons&quot;   &quot;Pistons&quot;   &quot;Pistons&quot;  
+## [141] &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Spurs&quot;    
+## [146] &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Heat&quot;      &quot;Heat&quot;      &quot;Heat&quot;     
+## [151] &quot;Heat&quot;      &quot;Heat&quot;      &quot;Heat&quot;      &quot;Spurs&quot;     &quot;Spurs&quot;    
+## [156] &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Celtics&quot;  
+## [161] &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Celtics&quot;   &quot;Lakers&quot;    &quot;Lakers&quot;   
+## [166] &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;   
+## [171] &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;    &quot;Lakers&quot;   
+## [176] &quot;Mavericks&quot; &quot;Mavericks&quot; &quot;Mavericks&quot; &quot;Mavericks&quot; &quot;Mavericks&quot;
+## [181] &quot;Mavericks&quot; &quot;Heat&quot;      &quot;Heat&quot;      &quot;Heat&quot;      &quot;Heat&quot;     
+## [186] &quot;Heat&quot;      &quot;Heat&quot;      &quot;Heat&quot;      &quot;Heat&quot;      &quot;Heat&quot;     
+## [191] &quot;Heat&quot;      &quot;Heat&quot;      &quot;Heat&quot;      &quot;Spurs&quot;     &quot;Spurs&quot;    
+## [196] &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Spurs&quot;     &quot;Warriors&quot;  &quot;Warriors&quot; 
+## [201] &quot;Warriors&quot;  &quot;Warriors&quot;  &quot;Warriors&quot;  &quot;Warriors&quot;  &quot;Cavaliers&quot;
+## [206] &quot;Cavaliers&quot; &quot;Cavaliers&quot; &quot;Cavaliers&quot; &quot;Cavaliers&quot; &quot;Cavaliers&quot;
+## [211] &quot;Cavaliers&quot; &quot;Warriors&quot;  &quot;Warriors&quot;  &quot;Warriors&quot;  &quot;Warriors&quot; 
+## [216] &quot;Warriors&quot;  &quot;Warriors&quot;  &quot;Warriors&quot;  &quot;Warriors&quot;  &quot;Warriors&quot;</code></pre>
+<pre class="r"><code>champs %&gt;% 
+    select(Team) %&gt;%
+    distinct()</code></pre>
+<pre><code>## # A tibble: 11 x 1
+##    Team     
+##    &lt;chr&gt;    
+##  1 Lakers   
+##  2 Celtics  
+##  3 Sixers   
+##  4 Pistons  
+##  5 Bulls    
+##  6 Rockets  
+##  7 Spurs    
+##  8 Heat     
+##  9 Mavericks
+## 10 Warriors 
+## 11 Cavaliers</code></pre>
+<pre class="r"><code>all_teams %&gt;%
+  group_by(Home) %&gt;%
+  summarize(mean=mean(PTS))</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##    Home  mean
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     0  96.3
+## 2     1 101.</code></pre>
+<pre class="r"><code>ggplot(all_teams, aes(x=Year, y = TP)) + 
+geom_bar(stat = &quot;identity&quot;)</code></pre>
+<p><img src="/project/2019-04-30-nba-data-analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
