@@ -1,0 +1,17 @@
+---
+title: "Welcome"
+author: "Yarmaine Pierson"
+date: 2019-05-02T21:13:14-05:00
+categories: ["R"]
+tags: ["R Markdown", "plot", "regression"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+#Welcome
+
+Yarmaine Pierson is a junior data scientist. She recently completed the Chromebook Data Science program.She plans to broaden her education in data science as well as cyber security.
+
+

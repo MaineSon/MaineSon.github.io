@@ -1,5 +1,0 @@
----
-slides:
-  theme: black
-title: Slides
----

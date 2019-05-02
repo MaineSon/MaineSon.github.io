@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1556825075989.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "17D8D92B",
+    "lastKnownWriteTime" : 1556825075,
+    "last_content_update" : 1556825075,
+    "path" : "/cloud/project/content/project/2019-05-02-democratic-twitter-analysis.Rmd",
+    "project_path" : "content/project/2019-05-02-democratic-twitter-analysis.Rmd",
+    "properties" : {
+        "cursorPosition" : "9,8",
+        "scrollLine" : "3"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 14,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

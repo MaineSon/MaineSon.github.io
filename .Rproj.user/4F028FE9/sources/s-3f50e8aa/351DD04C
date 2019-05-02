@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1556820190941.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "351DD04C",
+    "lastKnownWriteTime" : 1556818553,
+    "last_content_update" : 1556818553,
+    "path" : "/cloud/project/content/home/projects.md",
+    "project_path" : "content/home/projects.md",
+    "properties" : {
+        "cursorPosition" : "25,3",
+        "scrollLine" : "17"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "markdown"
+}

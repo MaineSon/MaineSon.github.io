@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1556823087702.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3274754769",
+    "id" : "D3359C6",
+    "lastKnownWriteTime" : 1556824630,
+    "last_content_update" : 1556824630436,
+    "path" : "/cloud/project/content/home/accomplishments.md",
+    "project_path" : "content/home/accomplishments.md",
+    "properties" : {
+        "cursorPosition" : "47,1",
+        "scrollLine" : "40"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "markdown"
+}

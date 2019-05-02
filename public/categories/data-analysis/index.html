@@ -7,8 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="generator" content="Source Themes Academic 4.1.0">
-  <meta name="generator" content="Hugo 0.55.4" />
+  <meta name="generator" content="Source Themes Academic 4.2.5">
 
   
 
@@ -30,7 +29,7 @@
   
     
   
-  <meta name="description" content="">
+  <meta name="description" content="Junior Data Scientist">
 
   
   <link rel="alternate" hreflang="en-us" href="../../categories/data-analysis/">
@@ -53,7 +52,7 @@
   
   
   
-  <meta name="theme-color" content="#2962ff">
+  <meta name="theme-color" content="#EC407A">
   
 
   
@@ -61,7 +60,6 @@
   
   
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
@@ -89,10 +87,14 @@
 
   
   
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Playfair+Display:400,700|Fauna+One">
   
 
-  <link rel="stylesheet" href="../../styles.css">
+  
+  
+  
+  <link rel="stylesheet" href="../../css/academic.min.8f875b8559d0f91d94a6670c041c31fb.css">
+
   
 
   
@@ -121,18 +123,18 @@
   
   <meta property="og:site_name" content="Yarmaine Pierson">
   <meta property="og:url" content="/categories/data-analysis/">
-  <meta property="og:title" content="data analysis | Yarmaine Pierson">
-  <meta property="og:description" content=""><meta property="og:image" content="/img/female.png">
+  <meta property="og:title" content="Data Analysis | Yarmaine Pierson">
+  <meta property="og:description" content="Junior Data Scientist"><meta property="og:image" content="/img/icon-192.png">
   <meta property="og:locale" content="en-us">
   
-  <meta property="og:updated_time" content="2019-05-01T00:00:00&#43;00:00">
+  <meta property="og:updated_time" content="2019-05-02T00:00:00&#43;00:00">
   
 
   
 
   
 
-  <title>data analysis | Yarmaine Pierson</title>
+  <title>Data Analysis | Yarmaine Pierson</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
@@ -273,7 +275,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link" href="../../resume.pdf">
+          <a class="nav-link" href="../../Ypierson.pdf">
             
             <span>Resume</span>
             
@@ -332,7 +334,7 @@
     
   
 <div class="universal-wrapper pt-3">
-  <h1 itemprop="name">data analysis</h1>
+  <h1 itemprop="name">Data Analysis</h1>
 
   
 
@@ -347,26 +349,7 @@
   
   
   <div>
-    <h2><a href="../../project/democratic-twitter-analysis/">Democratic Twitter Analysis</a></h2>
-    <div class="article-style">
-      
-      candid1 &lt;- userTimeline(&quot;PeteButtigieg&quot;, n=3200, includeRts=T) candid2 &lt;- userTimeline(&quot;BernieSanders&quot;, n=3200, includeRts=T) candid3 &lt;- userTimeline(&quot;KamalaHarris&quot;, n=3200, includeRts=T) candid4 &lt;- userTimeline(&quot;CoryBooker&quot;, n=3200, includeRts=T) str(candid1)
-df.candid1 &lt;- twListToDF(candid1) %&gt;% filter(isRetweet == FALSE) %&gt;% select(text, favoriteCount, screenName,created, retweetCount) df.candid2 &lt;- twListToDF(candid2) %&gt;% filter(isRetweet == FALSE) %&gt;% select(text, favoriteCount, screenName,created, retweetCount) df.candid3 &lt;- twListToDF(candid3) %&gt;% filter(isRetweet == FALSE) %&gt;% select(text, favoriteCount, screenName,created, retweetCount) df.candid4 &lt;- twListToDF(candid4) %&gt;% filter(isRetweet == FALSE) %&gt;% select(text, favoriteCount, screenName,created, retweetCount) all_candidates &lt;- bind_rows(df.
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="../../project/nba-analysis/">NBA Analysis</a></h2>
-    <div class="article-style">
-      
-      Import data champs &lt;- read_csv(file = &quot;data/championsdata.csv&quot;) ## Parsed with column specification: ## cols( ## .default = col_double(), ## Team = col_character() ## ) ## See spec(...) for full column specifications. runners &lt;- read_csv(file = &quot;data/runnerupsdata.csv&quot;) ## Parsed with column specification: ## cols( ## .default = col_double(), ## Team = col_character() ## ) ## See spec(...) for full column specifications. all_teams = bind_rows(&quot;Champion&quot; = champs, &quot;Runner&quot; = runners, .id = &quot;rank&quot;) champs &lt;- champs %&gt;% mutate(Team = ifelse(Team == &quot;Warriorrs&quot;,&quot;Warriors&quot;,Team)) %&gt;% mutate(Team = ifelse(Team == &quot;&#39;Heat&#39;&quot;,&quot;Heat&quot;,Team)) %&gt;% mutate(Win = as.
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="../../project/atus-survey-analysis/">ATUS Survey Analysis</a></h2>
+    <h2><a href="../../project/democratic-twitter-analysis/">Democratic Twitter Analysis </a></h2>
     <div class="article-style">
       
     </div>
@@ -385,7 +368,7 @@ df.candid1 &lt;- twListToDF(candid1) %&gt;% filter(isRetweet == FALSE) %&gt;% se
   
 
   <p class="powered-by">
-    &copy; Yarmaine Pierson 2019 &middot; 
+    
 
     Powered by the
     <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
@@ -441,7 +424,6 @@ df.candid1 &lt;- twListToDF(candid1) %&gt;% filter(isRetweet == FALSE) %&gt;% se
     
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
 
@@ -519,12 +501,14 @@ df.candid1 &lt;- twListToDF(candid1) %&gt;% filter(isRetweet == FALSE) %&gt;% se
     
     
     
+    
+    
       
     
     
     
     
-    <script src="../../js/academic.min.d7381f2d79e6271d4da28f474f49096c.js"></script>
+    <script src="../../js/academic.min.d813ae958640746e240f434cafc95afb.js"></script>
 
   </body>
 </html>
